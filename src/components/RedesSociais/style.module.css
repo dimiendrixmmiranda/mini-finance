@@ -1,0 +1,48 @@
+.rede {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.rede li::before {
+    content: attr(data-nome);
+    position: absolute;
+    width: 80px;
+    text-align: center;
+    left: 50%;
+    bottom: 2em;
+    transform: translate(-50%);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    background-color: var(--cor-3);
+    transition: opacity 0.5s ease, bottom 0.5s ease;
+}
+
+.rede li::after {
+    content: '';
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translate(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid var(--cor-3);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, bottom 0.5s ease;
+}
+
+.rede li:hover::before {
+    opacity: 1;
+    visibility: visible;
+    bottom: 4em;
+}
+.rede li:hover::after {
+    opacity: 1;
+    visibility: visible;
+    bottom: 2.5em;
+}
