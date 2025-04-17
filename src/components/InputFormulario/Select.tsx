@@ -1,6 +1,7 @@
 interface OPT {
     valor: string
     texto: string
+    idProduto?: string
 }
 
 interface SelectProps {
@@ -18,7 +19,7 @@ export default function Select({ textoLabel, id, options, valor, setValor }: Sel
                 {
                     options.map((opt, i) => {
                         return (
-                            <option key={i} value={opt.valor} className="capitalize">{opt.texto}</option>
+                            <option key={i} value={opt.valor} id={opt.idProduto ? opt.idProduto : ''} className="capitalize">{opt.texto}</option>
                         )
                     })
                 }

@@ -73,7 +73,7 @@ export function AuthProvider({ children }: AuthContextProps) {
             if (result.user) {
                 // Login bem-sucedido, configurando a sessão
                 configurarSessao(result.user);
-                router.push('/home');
+                router.push('/home/dashboard');
                 console.log("Usuário logado:", result.user);
             } else {
                 // Se o usuário não for encontrado, lançamos um erro
