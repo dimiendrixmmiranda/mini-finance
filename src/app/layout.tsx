@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/data/context/AuthContext";
 
+import 'primereact/resources/themes/lara-light-indigo/theme.css';  // Tema
+import 'primereact/resources/primereact.min.css';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],

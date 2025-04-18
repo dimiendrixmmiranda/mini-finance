@@ -1,0 +1,12 @@
+.cabecalho{
+    display: grid;
+    grid-template-columns: 1fr 50px;
+    width: 100%;
+    padding: .5em;
+}
+
+@media screen and (min-width: 1024px) {
+    .cabecalho{
+        display: flex;
+    }
+}
