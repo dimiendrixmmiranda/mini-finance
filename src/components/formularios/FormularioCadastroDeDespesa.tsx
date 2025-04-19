@@ -10,21 +10,21 @@ interface FormularioCadastroDeDespesaProps {
     setValorDaVenda: (valor: string) => void
     data: string
     setData: (valor: string) => void
-    categoria: string
-    setCategoria: (valor: string) => void
     formaDePagamento: string
     setFormaDePagamento: (valor: string) => void
+    funcionarioPagou: string
+    setFuncionarioPagou: (valor: string) => void
     salvarDespesa: (e: React.FormEvent) => void
 
 }
 
-export default function FormularioCadastroDeDespesa({ nomeDaDespesa, setNomeDaDespesa, tipoDaDespesa, setTipoDaDespesa, valorDaVenda, setValorDaVenda, data, setData, categoria, setCategoria, formaDePagamento, setFormaDePagamento, salvarDespesa }: FormularioCadastroDeDespesaProps) {
+export default function FormularioCadastroDeDespesa({ nomeDaDespesa, setNomeDaDespesa, tipoDaDespesa, setTipoDaDespesa, valorDaVenda, setValorDaVenda, data, setData, formaDePagamento, setFormaDePagamento, funcionarioPagou, setFuncionarioPagou, salvarDespesa }: FormularioCadastroDeDespesaProps) {
     return (
         <form className="flex flex-col gap-3 p-2 border-2 border-[--cor-2] rounded-md" onSubmit={salvarDespesa}>
             <h2 className="font-semibold text-xl uppercase text-center">Cadastro de Despesa:</h2>
             <Input
                 id="nomeDaDespesa"
-                textoLabel="Informe o tipo da Despesa"
+                textoLabel="Informe o nome da despesa:"
                 tipo="text"
                 valor={nomeDaDespesa}
                 setValor={setNomeDaDespesa}
@@ -49,19 +49,19 @@ export default function FormularioCadastroDeDespesa({ nomeDaDespesa, setNomeDaDe
                 textoLabel="Data da despesa:"
                 valor={data}
                 setValor={setData} />
-            <Select
-                id="categoria"
-                textoLabel="Selecione a categoria da despesa:"
-                options={[{ valor: '', texto: 'Selecione' }, { texto: 'Água', valor: 'agua' }, { texto: 'Luz', valor: 'luz' }]}
-                valor={categoria}
-                setValor={setCategoria}
-            />
             <Input
                 id="formaDePagamento"
                 tipo="text"
                 textoLabel="Forma de Pagamento:"
                 valor={formaDePagamento}
                 setValor={setFormaDePagamento} />
+            {/* Vai ser um select mais pra frente */}
+            <Input
+                id="funcionarioPagou"
+                tipo="text"
+                textoLabel="Funcionário que pagou:"
+                valor={funcionarioPagou}
+                setValor={setFuncionarioPagou} />
 
             {/* Implementar um cadastro de clientes depois para utilizar um select aqui */}
             <button className="flex justify-center items-center text-center w-full bg-[--cor-2] uppercase font-bold text-xl py-1 text-white" style={{ textShadow: '1px 1px 2px black' }} type="submit">Salvar</button>

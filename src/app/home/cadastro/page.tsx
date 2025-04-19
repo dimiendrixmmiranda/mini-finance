@@ -6,18 +6,10 @@ import FormularioCadastroDeVenda from "@/components/formularios/FormularioCadast
 import Template from "@/components/template/Template";
 import useAuth from "@/data/hook/useAuth";
 import Produto from "@/interfaces/Produto";
+import UsuarioFirestore from "@/interfaces/UsuarioFirestore";
 import { db } from "@/lib/firebase";
 import { addDoc, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-
-export interface UsuarioFirestore {
-    cidade: string;
-    email: string;
-    nome: string;
-    nomeDoNegocio: string;
-    tamanhoDaEmpresa: string;
-    telefone: string;
-}
 
 export default function Page() {
     const { usuario } = useAuth()
@@ -43,8 +35,8 @@ export default function Page() {
     const [tipoDaDespesa, setTipoDaDespesa] = useState('')
     const [valorDaVendaDespesa, setValorDaVendaDespesa] = useState('')
     const [dataDespesa, setDataDespesa] = useState('')
-    const [categoriaDespesa, setCategoriaDespesa] = useState('')
     const [formaDePagamento, setFormaDePagamento] = useState('')
+    const [funcionarioPagou, setFuncionarioPagou] = useState('')
 
     const [dadosUsuario, setDadosUsuario] = useState<UsuarioFirestore | null>(null);
 
@@ -86,7 +78,7 @@ export default function Page() {
                 data: data.data?.toDate ? data.data.toDate() : new Date() // firebase.Timestamp para Date
             };
         });
-    
+
         setProdutosDisponiveis(lista);
     }
 
@@ -207,43 +199,43 @@ export default function Page() {
 
     async function salvarDespesa(e: React.FormEvent) {
         e.preventDefault();
-    
+
         if (!usuario?.uid) {
             alert("Usuário não autenticado.");
             return;
         }
-    
+
         try {
             const despesasRef = collection(db, "usuarios", usuario.uid, "despesas");
-    
+
             await addDoc(despesasRef, {
                 nome: nomeDaDespesa,
                 tipo: tipoDaDespesa,
                 valor: parseFloat(valorDaVendaDespesa.replace('R$', '').replace(',', '.')),
                 data: dataDespesa || new Date().toISOString().split('T')[0],
-                categoria: categoriaDespesa,
-                formaDePagamento
+                formaDePagamento,
+                funcionarioPagou
             });
-    
+
             alert("Despesa salva com sucesso!");
-    
+
             setTimeout(() => {
                 window.location.reload();
             }, 1000);
-    
+
             // Resetar os campos
             setNomeDaDespesa('');
             setTipoDaDespesa('');
             setValorDaVendaDespesa('');
             setDataDespesa('');
-            setCategoriaDespesa('');
             setFormaDePagamento('');
+            setFuncionarioPagou('')
         } catch (error) {
             console.error("Erro ao salvar despesa:", error);
             alert("Erro ao salvar despesa.");
         }
     }
-    
+
 
     return (
         <ForcarAutenticacao>
@@ -297,10 +289,10 @@ export default function Page() {
                         setValorDaVenda={setValorDaVendaDespesa}
                         data={dataDespesa}
                         setData={setDataDespesa}
-                        categoria={categoriaDespesa}
-                        setCategoria={setCategoriaDespesa}
                         formaDePagamento={formaDePagamento}
                         setFormaDePagamento={setFormaDePagamento}
+                        funcionarioPagou={funcionarioPagou}
+                        setFuncionarioPagou={setFuncionarioPagou}
                         salvarDespesa={salvarDespesa}
                     />
                 </div>
