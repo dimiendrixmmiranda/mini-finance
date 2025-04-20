@@ -12,6 +12,8 @@ interface FormularioCadastroDeVendaProps {
     setData: (valor: string) => void
     precoUnitario: string,
     setPrecoUnitario: (valor: string) => void
+    precoUnitarioVenda: string,
+    setPrecoUnitarioVenda: (valor: string) => void
     desconto: string
     setDesconto: (valor: string) => void
     valorDaVenda: string
@@ -21,15 +23,15 @@ interface FormularioCadastroDeVendaProps {
 
 }
 
-export default function FormularioCadastroDeVenda({ produtoVendido, setProdutoVendido, quantidadeVendida, setQuantidadeVendida, data, setData, precoUnitario, setPrecoUnitario, desconto, setDesconto, valorDaVenda, setValorDaVenda, produtosDisponiveis, salvarVenda }: FormularioCadastroDeVendaProps) {
+export default function FormularioCadastroDeVenda({ produtoVendido, setProdutoVendido, quantidadeVendida, setQuantidadeVendida, data, setData, precoUnitario, setPrecoUnitario, precoUnitarioVenda, setPrecoUnitarioVenda, desconto, setDesconto, valorDaVenda, setValorDaVenda, produtosDisponiveis, salvarVenda }: FormularioCadastroDeVendaProps) {
     const [quantidadeDisponivel, setQuantidadeDisponivel] = useState<number | null>(null)
 
     function calcularDesconto(e: React.FormEvent) {
         e.preventDefault()
         const qtde = parseInt(quantidadeVendida)
         const descontoFormatado = parseFloat(desconto) / 100
-        const precoPorUnidade = parseFloat(precoUnitario)
-
+        const precoPorUnidade = parseFloat(precoUnitarioVenda)
+        console.log(precoPorUnidade)
         const precoFinal = qtde * precoPorUnidade
         const precoFinalComDesconto = precoFinal - (precoFinal * descontoFormatado)
         setValorDaVenda(`R$${precoFinalComDesconto.toFixed(2)}`)
@@ -52,8 +54,10 @@ export default function FormularioCadastroDeVenda({ produtoVendido, setProdutoVe
                 setValor={(valor) => {
                     setProdutoVendido(valor);
                     const produtoSelecionado = produtosDisponiveis.find(p => p.id === valor);
+                    console.log(produtoSelecionado)
                     if (produtoSelecionado) {
-                        setPrecoUnitario(`${produtoSelecionado.precoDeVenda}`)
+                        setPrecoUnitario(`${produtoSelecionado.precoUnitario}`)
+                        setPrecoUnitarioVenda(`${produtoSelecionado.precoDeVenda}`)
                     }
                     if (produtoSelecionado) {
                         setQuantidadeDisponivel(produtoSelecionado.quantidade)
@@ -69,12 +73,11 @@ export default function FormularioCadastroDeVenda({ produtoVendido, setProdutoVe
                 setValor={(valor) => {
                     setQuantidadeVendida(valor)
                     const qtde = Number(valor)
-                    const preco = parseFloat(precoUnitario)
+                    const preco = parseFloat(precoUnitarioVenda)
                     const total = qtde * preco
                     setValorDaVenda(`R$${total.toFixed(2).replace('.', ',')}`)
                 }}
             />
-
             {/* tem que linkar quando eu selecionar o produto */}
             <Input
                 id="precoUnitario"
@@ -82,6 +85,12 @@ export default function FormularioCadastroDeVenda({ produtoVendido, setProdutoVe
                 textoLabel="Preco Unitário:"
                 valor={precoUnitario}
                 setValor={setPrecoUnitario} />
+            <Input
+                id="precoUnitarioVenda"
+                tipo="text"
+                textoLabel="Preco Unitário da Venda:"
+                valor={precoUnitarioVenda}
+                setValor={setPrecoUnitarioVenda} />
             <div className="flex items-center justify-center
             gap-2">
                 <Input

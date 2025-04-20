@@ -2,6 +2,7 @@
 
 import ForcarAutenticacao from "@/components/autenticacao/forcarAutenticacao";
 import GraficoDeBarra from "@/components/graficos/GraficoDeBarra";
+import GraficoDeLinha from "@/components/graficos/GraficoDeLinha";
 import GraficoPizza from "@/components/graficos/GraficoPizza";
 import Template from "@/components/template/Template";
 import useAuth from "@/data/hook/useAuth";
@@ -11,13 +12,6 @@ import Venda from "@/interfaces/Venda";
 import { db } from "@/lib/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-// BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid,
-
-const tamanhosMaisVendidos = [
-    { tamanho: 'M', quantidade: 18 },
-    { tamanho: 'G', quantidade: 10 },
-    { tamanho: 'GG', quantidade: 2 },
-]
 
 export default function Dashboard() {
     const { usuario } = useAuth()
@@ -28,8 +22,11 @@ export default function Dashboard() {
     const [produtoEQuantidade, setProdutoEQuantidade] = useState<{ produto: string, quantidade: number }[]>([]);
     const [produtosMaisVendidos, setProdutosMaisVendidos] = useState<{ produto: string, quantidade: number }[]>([]);
     const [depesasDoMes, setDepesasDoMes] = useState<{ despesa: string, quantidade: number }[]>([]);
-    const [vendasUltimos7Dias, setVendasUltimos7Dias] = useState<{ dia: string, vendas: number }[]>([]);
-    const [vendasUltimos6Meses, setVendasUltimos6Meses] = useState<{ mes: string, vendas: number }[]>([]);
+    const [tamanhosMaisVendidos, setTamanhosMaisVendidos] = useState<{ tamanho: string, quantidade: number }[]>([]);
+    const [vendasUltimos7Dias, setVendasUltimos7Dias] = useState<{ dia: string, ["Produtos Vendidos"]: number }[]>([]);
+    const [vendasUltimos6Meses, setVendasUltimos6Meses] = useState<{ mes: string, ["Produtos Vendidos"]: number }[]>([]);
+    const [lucroMensal, setLucroMensal] = useState<{ mes: string, lucro: number }[]>([]);
+    const [lucroUltimos7Dias, setLucroUltimos7Dias] = useState<{ dia: string, lucro: number }[]>([]);
 
     async function buscarProdutos() {
         if (!usuario?.uid) return;
@@ -69,6 +66,7 @@ export default function Dashboard() {
                 data: data.data?.toDate ? data.data.toDate() : new Date(),
                 desconto: data.desconto ?? 0,
                 precoUnitario: data.precoUnitario ?? 0,
+                precoUnitarioVenda: data.precoUnitario ?? 0,
                 produtoVendido: data.produtoVendido ?? '',
                 quantidadeVendida: data.quantidadeVendida ?? 0,
                 valorDaVenda: data.valorDaVenda ?? 0,
@@ -105,7 +103,6 @@ export default function Dashboard() {
                 despesa: despesa.nome,
                 quantidade: despesa.valor,
             }));
-            console.log(filtrarDespesas)
         setDepesasDoMes(filtrarDespesas)
         setDespesas(lista)
     }
@@ -132,6 +129,24 @@ export default function Dashboard() {
             .sort((a, b) => b.quantidade - a.quantidade);
 
         setProdutosMaisVendidos(lista);
+    }, [vendas, produtosDisponiveis]);
+
+    useEffect(() => {
+        if (!vendas || produtosDisponiveis.length === 0) return;
+
+        const contagem: Record<string, number> = {};
+
+        vendas.forEach(venda => {
+            const produto = produtosDisponiveis.find(p => p.id === venda.produtoVendido);
+            const tamanho = produto?.tamanho ?? "Desconhecido";
+            contagem[tamanho] = (contagem[tamanho] || 0) + venda.quantidadeVendida;
+        });
+
+        const lista = Object.entries(contagem)
+            .map(([tamanho, quantidade]) => ({ tamanho, quantidade }))
+            .sort((a, b) => b.quantidade - a.quantidade);
+
+        setTamanhosMaisVendidos(lista);
     }, [vendas, produtosDisponiveis]);
 
     // Vendas dos ultimos dias
@@ -163,7 +178,7 @@ export default function Dashboard() {
             const nomeDia = diasDaSemana[data.getDay()];
             return {
                 dia: nomeDia,
-                vendas: ultimos7Dias[dataStr]
+                ["Produtos Vendidos"]: ultimos7Dias[dataStr]
             };
         });
 
@@ -198,17 +213,91 @@ export default function Dashboard() {
             const [ano, mesIndex] = chave.split("-").map(Number);
             return {
                 mes: `${meses[mesIndex]}/${ano.toString().slice(-2)}`,
-                vendas: ultimos6Meses[chave]
+                ["Produtos Vendidos"]: ultimos6Meses[chave]
             };
         });
 
         setVendasUltimos6Meses(lista);
     }, [vendas]);
 
+
+    useEffect(() => {
+        if (!vendas) return;
+
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+        const hoje = new Date();
+        const ultimos6Meses: { [key: string]: number } = {};
+
+        for (let i = 5; i >= 0; i--) {
+            const data = new Date(hoje.getFullYear(), hoje.getMonth() - i, 1);
+            const chave = `${data.getFullYear()}-${String(data.getMonth()).padStart(2, "0")}`;
+            ultimos6Meses[chave] = 0;
+        }
+
+        vendas.forEach(venda => {
+            const dataVenda = venda.data;
+            const chave = `${dataVenda.getFullYear()}-${String(dataVenda.getMonth()).padStart(2, "0")}`;
+            const custo = venda.precoUnitarioVenda * venda.quantidadeVendida;
+            const lucro = venda.valorDaVenda - custo;
+            console.log(custo)
+            console.log(venda.valorDaVenda)
+            if (chave in ultimos6Meses) {
+                ultimos6Meses[chave] += lucro;
+            }
+        });
+
+        const lista = Object.keys(ultimos6Meses).map(chave => {
+            const [ano, mesIndex] = chave.split("-").map(Number);
+            return {
+                mes: `${meses[mesIndex]}/${ano.toString().slice(-2)}`,
+                lucro: Number(ultimos6Meses[chave].toFixed(2))
+            };
+        });
+
+        setLucroMensal(lista);
+    }, [vendas]);
+
+    useEffect(() => {
+        if (!vendas) return;
+
+        const diasDaSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+        const hoje = new Date();
+        const ultimos7DiasLucro: { [key: string]: number } = {};
+
+        // Inicializa os últimos 7 dias com lucro zero
+        for (let i = 6; i >= 0; i--) {
+            const data = new Date();
+            data.setDate(hoje.getDate() - i);
+            const chave = data.toDateString();
+            ultimos7DiasLucro[chave] = 0;
+        }
+
+        vendas.forEach(venda => {
+            const dataVenda = venda.data;
+            const chave = dataVenda.toDateString();
+            if (chave in ultimos7DiasLucro) {
+                const lucro = venda.valorDaVenda - (venda.precoUnitario * venda.quantidadeVendida);
+                ultimos7DiasLucro[chave] += lucro;
+            }
+        });
+
+        const lista = Object.keys(ultimos7DiasLucro).map(dataStr => {
+            const data = new Date(dataStr);
+            const nomeDia = diasDaSemana[data.getDay()];
+            return {
+                dia: nomeDia,
+                lucro: Number(ultimos7DiasLucro[dataStr].toFixed(2)) // arredonda para 2 casas decimais
+            };
+        });
+
+        setLucroUltimos7Dias(lista);
+    }, [vendas]);
+
+
     return (
         <ForcarAutenticacao>
             <Template>
-                <div className="p-4 flex flex-col gap-4 xl:p-6">
+                <div className="p-4 flex flex-col gap-4 xl:p-8">
                     <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         <GraficoPizza
                             array={produtoEQuantidade}
@@ -239,30 +328,31 @@ export default function Dashboard() {
                         <GraficoDeBarra
                             array={vendasUltimos7Dias}
                             chaveNome="dia"
-                            chaveValor="vendas"
+                            chaveValor="Produtos Vendidos"
                             titulo="Vendas dos últimos 7 dias"
                         />
                         <GraficoDeBarra
                             array={vendasUltimos6Meses}
                             chaveNome="mes"
-                            chaveValor="vendas"
+                            chaveValor="Produtos Vendidos"
                             titulo="Vendas dos últimos 6 meses"
                         />
                     </div>
 
-                    {/* Gráfico de Lucro */}
-                    {/* <div className="bg-white rounded-xl shadow p-4">
-                        <h2 className="text-xl font-bold mb-4">Lucro Mensal</h2>
-                        <ResponsiveContainer width="100%" height={250}>
-                            <LineChart data={lucroMensal}>
-                                <XAxis dataKey="mes" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Line type="monotone" dataKey="lucro" stroke="#10B981" />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </div> */}
+                    <div className="flex flex-col gap-4 xl:grid xl:grid-cols-2">
+                        <GraficoDeLinha
+                            array={lucroUltimos7Dias}
+                            chaveNome="dia"
+                            chaveValor="lucro"
+                            titulo="Lucro nos últimos 7 dias"
+                        />
+                        <GraficoDeLinha
+                            array={lucroMensal}
+                            chaveNome="mes"
+                            chaveValor="lucro"
+                            titulo="Lucro no último mês"
+                        />
+                    </div>
                 </div>
             </Template>
         </ForcarAutenticacao>

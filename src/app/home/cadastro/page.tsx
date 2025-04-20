@@ -25,6 +25,7 @@ export default function Page() {
     // Cadastro de venda
     const [produtoVendido, setProdutoVendido] = useState('')
     const [quantidadeVendida, setQuantidadeVendida] = useState('')
+    const [precoUnitarioV, setPrecoUnitarioV] = useState('R$')
     const [precoUnitarioVenda, setPrecoUnitarioVenda] = useState('R$')
     const [desconto, setDesconto] = useState('');
     const [valorDaVenda, setValorDaVenda] = useState('R$')
@@ -154,6 +155,7 @@ export default function Page() {
             const produtoData = produtoSnap.data();
             const quantidadeAtual = Number(produtoData.quantidade);
             const quantidadeVenda = Number(quantidadeVendida);
+            const valorDaVendaAtual = Number(valorDaVenda.replace('R$', '').replace(',', '.'))
 
             if (quantidadeVenda > quantidadeAtual) {
                 alert("Erro: você está tentando vender mais do que há em estoque.");
@@ -164,8 +166,9 @@ export default function Page() {
             const venda = {
                 produtoVendido, // ID do produto
                 quantidadeVendida: quantidadeVenda,
-                precoUnitario: precoUnitarioVenda,
-                valorDaVenda,
+                precoUnitario: precoUnitarioV,
+                precoUnitarioVenda: precoUnitarioVenda,
+                valorDaVenda: valorDaVendaAtual,
                 desconto,
                 data: data || new Date().toISOString().split('T')[0]
             };
@@ -268,8 +271,10 @@ export default function Page() {
                         setProdutoVendido={setProdutoVendido}
                         quantidadeVendida={quantidadeVendida}
                         setQuantidadeVendida={setQuantidadeVendida}
-                        precoUnitario={precoUnitarioVenda}
-                        setPrecoUnitario={setPrecoUnitarioVenda}
+                        precoUnitario={precoUnitarioV}
+                        setPrecoUnitario={setPrecoUnitarioV}
+                        precoUnitarioVenda={precoUnitarioVenda}
+                        setPrecoUnitarioVenda={setPrecoUnitarioVenda}
                         desconto={desconto}
                         setDesconto={setDesconto}
                         valorDaVenda={valorDaVenda}

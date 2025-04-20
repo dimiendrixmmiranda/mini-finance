@@ -18,7 +18,12 @@ export default function Header() {
                 <Image alt="Logo Mini Finance" src={'/mini-finance.png'} fill className="object-cover"></Image>
             </Link>
 
-            <Offcanvas />
+
+            {
+                usuario?.uid ? (
+                    <Offcanvas />
+                ) : ''
+            }
 
             {
                 usuario?.uid ? (

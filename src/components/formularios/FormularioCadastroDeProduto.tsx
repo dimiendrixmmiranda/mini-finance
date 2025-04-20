@@ -55,7 +55,7 @@ export default function FormularioCadastroDeProduto({ nomeDoProduto, setNomeDoPr
             <Input
                 id="tamanho"
                 tipo="text"
-                textoLabel="Tamanho do Produto: (Opcional)"
+                textoLabel="Tamanho do Produto:"
                 valor={tamanhoDoProduto}
                 setValor={setTamanhoDoProduto} />
             <button
