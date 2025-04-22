@@ -239,8 +239,6 @@ export default function Dashboard() {
             const chave = `${dataVenda.getFullYear()}-${String(dataVenda.getMonth()).padStart(2, "0")}`;
             const custo = venda.precoUnitarioVenda * venda.quantidadeVendida;
             const lucro = venda.valorDaVenda - custo;
-            console.log(custo)
-            console.log(venda.valorDaVenda)
             if (chave in ultimos6Meses) {
                 ultimos6Meses[chave] += lucro;
             }

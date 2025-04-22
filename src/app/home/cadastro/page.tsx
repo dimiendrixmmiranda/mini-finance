@@ -8,7 +8,7 @@ import useAuth from "@/data/hook/useAuth";
 import Produto from "@/interfaces/Produto";
 import UsuarioFirestore from "@/interfaces/UsuarioFirestore";
 import { db } from "@/lib/firebase";
-import { addDoc, collection, doc, getDoc, getDocs, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, Timestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export default function Page() {
@@ -107,7 +107,7 @@ export default function Page() {
                 precoUnitario: parseFloat(precoUnitario.replace('R$', '').replace(',', '.')),
                 precoDeVenda: parseFloat(precoDeVenda.replace('R$', '').replace(',', '.')),
                 tamanho: tamanhoDoProduto,
-                data: new Date()
+                data: Timestamp.fromDate(new Date())
             });
 
             // Em seguida, atualiza o mesmo documento com seu próprio ID
@@ -170,7 +170,7 @@ export default function Page() {
                 precoUnitarioVenda: precoUnitarioVenda,
                 valorDaVenda: valorDaVendaAtual,
                 desconto,
-                data: data || new Date().toISOString().split('T')[0]
+                data: Timestamp.fromDate(new Date(data))
             };
 
             // Salvar venda
@@ -215,7 +215,7 @@ export default function Page() {
                 nome: nomeDaDespesa,
                 tipo: tipoDaDespesa,
                 valor: parseFloat(valorDaVendaDespesa.replace('R$', '').replace(',', '.')),
-                data: dataDespesa || new Date().toISOString().split('T')[0],
+                data: Timestamp.fromDate(new Date(dataDespesa)),
                 formaDePagamento,
                 funcionarioPagou
             });
