@@ -140,7 +140,7 @@ export default function Home() {
 								onClick={() => setModo('login')}
 								className="flex items-center text-2xl col-start-1 col-end-3 mt-3 justify-center"
 							>
-								Já é login??? Entre agora mesmo!
+								Já é Cadastrado??? Faça o login agora mesmo!
 							</button>
 						</div>
 					) : (
@@ -171,7 +171,7 @@ export default function Home() {
 								onClick={() => setModo('cadastro')}
 								className="flex items-center text-2xl col-start-1 col-end-3 gap-2 mt-3"
 							>
-								Ainda não é login?? cadastro!
+								Ainda não é cadastrado??? Cadastre-se já!
 							</button>
 						</div>
 					)

@@ -29,6 +29,13 @@ export default {
       poppins: ['var(--fonte-primaria)', 'sans-serif'],
       boogaloo: ['var(--fonte-secundaria)', 'sans-serif'],
     },
+    screens: {
+      'sm': '425px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1440px',
+    },
   },
   plugins: [],
 } satisfies Config;
