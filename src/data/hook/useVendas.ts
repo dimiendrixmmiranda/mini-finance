@@ -25,11 +25,13 @@ export function useVendas(usuario?: { uid: string }) {
                     return {
                         data: data.data?.toDate ? data.data.toDate() : new Date(),
                         desconto: data.desconto ?? 0,
+                        nome: data.nome,
                         precoUnitario: data.precoUnitario ?? 0,
                         precoUnitarioVenda: data.precoUnitarioVenda ?? 0,
-                        produtoVendido: data.produtoVendido ?? '',
+                        produtoId: data.produtoId ?? '',
                         quantidadeVendida: data.quantidadeVendida ?? 0,
-                        valorDaVenda: data.valorDaVenda ?? 0,
+                        valorFinalDaVenda: data.valorFinalDaVenda ?? 0,
+                        tamanho: data.tamanho
                     };
                 });
                 setVendas(lista)

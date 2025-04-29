@@ -3,7 +3,9 @@ export default interface Venda {
     desconto: number
     precoUnitario: number,
     precoUnitarioVenda: number,
-    produtoVendido: string
+    produtoId: string
     quantidadeVendida: number
-    valorDaVenda: number
+    valorFinalDaVenda: number
+    nome: string
+    tamanho: string
 }

@@ -3,6 +3,7 @@ export default interface UsuarioFirestore {
     email: string;
     nome: string;
     nomeDoNegocio: string;
+    tipoDeLoja: string
     tamanhoDaEmpresa: string;
     telefone: string;
 }

@@ -28,7 +28,7 @@ export function useProdutos(usuario?: { uid: string }) {
                         categoria: data.categoria,
                         quantidade: data.quantidade,
                         precoUnitario: data.precoUnitario,
-                        precoDeVenda: data.precoDeVenda,
+                        precoUnitarioVenda: data.precoUnitarioVenda,
                         tamanho: data.tamanho,
                         data: data.data?.toDate ? data.data.toDate() : new Date()
                     }

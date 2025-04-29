@@ -3,7 +3,7 @@
 import { createContext, useEffect, useState } from "react";
 import { useRouter } from 'next/navigation'; // Usando o useRouter corretamente
 import { auth, db } from "@/lib/firebase"; // Importando a instância do Firebase auth
-import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"; // Importando funções de autenticação
+import { User, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth"
 import Cookies from 'js-cookie';
 import { FirebaseError } from "firebase/app";
 import Usuario from "@/interfaces/Usuario";
@@ -14,7 +14,16 @@ interface AuthContextProps {
     children?: React.ReactNode;
     carregando?: boolean
     login?: (email: string, senha: string) => Promise<void>;
-    cadastrar?: (email: string, senha: string, nomeDoNegocio?: string, telefone?: string, tamanhoDaEmpresa?: string, cidade?: string, nome?: string) => Promise<void>;
+    cadastrar?: (
+        email: string,
+        senha: string,
+        tipoDeLoja: string,
+        nomeDoNegocio?: string,
+        telefone?: string,
+        tamanhoDaEmpresa?: string,
+        cidade?: string,
+        nome?: string
+    ) => Promise<void>;
     logout?: () => Promise<void>;
 
 }
@@ -91,6 +100,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     async function cadastrar(
         email: string,
         senha: string,
+        tipoDeLoja: string,
         nomeDoNegocio?: string,
         telefone?: string,
         tamanhoDaEmpresa?: string,
@@ -101,21 +111,26 @@ export function AuthProvider({ children }: AuthContextProps) {
             const userCredential = await createUserWithEmailAndPassword(auth, email, senha);
             const uid = userCredential.user.uid;
 
-            // Salva os dados extras no Firestore
-            await setDoc(doc(db, "usuarios", uid), {
-                nome,
+            // Criar o objeto de dados a ser salvo, filtrando campos undefined
+            const dados: Record<string, string> = {
                 email,
-                telefone,
-                nomeDoNegocio,
-                tamanhoDaEmpresa,
-                cidade
-            });
+                tipoDeLoja
+            };
+
+            if (nome) dados.nome = nome;
+            if (telefone) dados.telefone = telefone;
+            if (nomeDoNegocio) dados.nomeDoNegocio = nomeDoNegocio;
+            if (tamanhoDaEmpresa) dados.tamanhoDaEmpresa = tamanhoDaEmpresa;
+            if (cidade) dados.cidade = cidade;
+
+            // Salva os dados no Firestore
+            await setDoc(doc(db, "usuarios", uid), dados);
 
             setCarregando(true);
 
             // Já tem o user aqui
             configurarSessao(userCredential.user);
-            router.push("/home");
+            router.push("/home/dashboard");
             console.log("Usuário logado:", userCredential.user);
         } catch (error: unknown) {
             if (error instanceof FirebaseError) {
@@ -139,8 +154,6 @@ export function AuthProvider({ children }: AuthContextProps) {
             setCarregando(false);
         }
     }
-
-
 
     function gerenciarCookie(logado: boolean) {
         if (logado) {

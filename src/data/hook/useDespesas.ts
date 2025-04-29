@@ -29,9 +29,10 @@ export function useDespesas(usuario?: { uid: string }) {
                         funcionarioPagou: data.funcionarioPagou,
                         nome: data.nome,
                         tipo: data.tipo,
-                        valor: data.valor,
+                        valorDaDespesa: data.valorDaDespesa,
+                        categoriaDaDespesa: data.categoriaDaDespesa
                     };
-                });
+                })
                 setDespesas(lista)
             } catch (err) {
                 setErro(err as Error)

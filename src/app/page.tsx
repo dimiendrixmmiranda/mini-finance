@@ -13,16 +13,15 @@ export default function Home() {
 	const [modo, setModo] = useState<'cadastro' | 'login'>('cadastro')
 	const [, setErro] = useState<string | null>(null)
 
-	
+
 	const [nome, setNome] = useState('')
 	const [nomeDoNegocio, setNomeDoNegocio] = useState('')
 	const [telefone, setTelefone] = useState('')
 	const [tamanhoDaEmpresa, setTamanhoDaEmpresa] = useState('')
 	const [cidade, setCidade] = useState('')
+	const [tipoDeLoja, setTipoDeLoja] = useState('')
 	const [email, setEmail] = useState('')
 	const [senha, setSenha] = useState('')
-	
-	console.log(tamanhoDaEmpresa, cidade)
 
 	async function submeter(e?: React.MouseEvent<HTMLButtonElement>) {
 		e?.preventDefault()
@@ -48,7 +47,7 @@ export default function Home() {
 		} else {
 			if (email && senha) {
 				try {
-					await cadastrar(email, senha, nomeDoNegocio, telefone, tamanhoDaEmpresa, cidade, nome)
+					await cadastrar(email, senha, tipoDeLoja, nomeDoNegocio, telefone, tamanhoDaEmpresa, cidade, nome)
 					console.log("Cadastro realizado com sucesso")
 				} catch (error) {
 					console.error("Erro ao cadastrar:", error)
@@ -71,8 +70,8 @@ export default function Home() {
 			<div className="font-poppins p-4 flex justify-center items-center md:min-h-[50vh] lg:min-h-[75vh] xl:min-h-[78vh]">
 				{
 					modo === 'cadastro' ? (
-						<div className="max-w-[825px] rounded-lg md:grid md:grid-cols-2 md:gap-4 md:border-2 md:p-4">
-							<div className="relative w-full h-full max-w-[370px] rounded-lg overflow-hidden">
+						<div className="max-w-[910px] rounded-lg md:grid md:grid-cols-2 md:gap-4 md:border-2 md:p-4">
+							<div className="relative w-full h-full max-w-[500px] rounded-lg overflow-hidden">
 								<Image alt="Banner mini Finance" src={'/banner.png'} fill className="object-contain"></Image>
 							</div>
 							<form action="" className="flex flex-col w-full maw-w-[95%] p-4 border-2 gap-3 md:border-0 md:p-0">
@@ -101,18 +100,25 @@ export default function Home() {
 									<Select
 										id="porteDaEmpresa"
 										textoLabel="Porte da Empresa"
-										options={[{texto: 'Selecione', valor: ''}, {texto: 'Micro', valor: 'micro'}, {texto: 'Pequena', valor: 'pequena'}, {texto: 'Média', valor: 'media'}, {texto: 'Grande', valor: 'grande'}]}
+										options={[{ texto: 'Selecione', valor: '' }, { texto: 'Micro', valor: 'micro' }, { texto: 'Pequena', valor: 'pequena' }, { texto: 'Média', valor: 'media' }, { texto: 'Grande', valor: 'grande' }]}
 										valor={tamanhoDaEmpresa}
 										setValor={setTamanhoDaEmpresa}
 									/>
 									<Select
 										id="cidade"
 										textoLabel="Informe a cidade:"
-										options={[{texto: 'Selecione', valor: ''}, {texto: 'PR', valor: 'pr'},{texto: 'RS', valor: 'rs'}, {texto: 'SC', valor: 'sc'},]}
+										options={[{ texto: 'Selecione', valor: '' }, { texto: 'PR', valor: 'pr' }, { texto: 'RS', valor: 'rs' }, { texto: 'SC', valor: 'sc' },]}
 										valor={cidade}
 										setValor={setCidade}
 									/>
 								</div>
+								<Select
+									id="tipoDeLoja"
+									textoLabel="Selecione o tipo de loja:"
+									options={[{ texto: 'Selecione', valor: '' }, { texto: 'Loja de Roupas', valor: 'loja-de-roupas' }, { texto: 'Restaurante', valor: 'restaurante' }, { texto: 'Salão de Beleza', valor: 'salao-de-beleza' }, { texto: 'Papelaria', valor: 'papelaria' }, { texto: 'Eletrônicos', valor: 'eletronicos' }]}
+									valor={tipoDeLoja}
+									setValor={setTipoDeLoja}
+								/>
 								<div className="md:grid md:grid-cols-2 md:gap-2">
 									<Input
 										id="email"

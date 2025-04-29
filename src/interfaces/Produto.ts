@@ -4,7 +4,7 @@ export default interface Produto {
     categoria: string;
     quantidade: number;
     precoUnitario: number;
-    precoDeVenda: number;
+    precoUnitarioVenda: number;
     tamanho: string;
     data: Date;
 }

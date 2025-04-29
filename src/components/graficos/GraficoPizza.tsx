@@ -29,6 +29,12 @@ export default function GraficoPizza<T>({ array, chaveNome, chaveValor, titulo }
                         ))}
                     </Pie>
                     <Tooltip />
+                    {/* Transformar os valores em dinheiro */}
+                    {/* <Tooltip
+                        formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Valor']}
+                        labelFormatter={(label: string) => `${label}`}
+                    /> */}
+
                 </PieChart>
             </ResponsiveContainer>
         </div>

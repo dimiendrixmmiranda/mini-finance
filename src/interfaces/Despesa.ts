@@ -4,5 +4,6 @@ export default interface Despesa {
     funcionarioPagou: string
     nome: string
     tipo: string
-    valor: number
+    valorDaDespesa: number
+    categoriaDaDespesa: string
 }
