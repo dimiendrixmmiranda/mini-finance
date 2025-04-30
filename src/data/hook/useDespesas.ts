@@ -26,7 +26,7 @@ export function useDespesas(usuario?: { uid: string }) {
                     return {
                         data: data.data?.toDate ? data.data.toDate() : new Date(),
                         formaDePagamento: data.formaDePagamento,
-                        funcionarioPagou: data.funcionarioPagou,
+                        funcionarioQuePagou: data.funcionarioQuePagou,
                         nome: data.nome,
                         tipo: data.tipo,
                         valorDaDespesa: data.valorDaDespesa,
