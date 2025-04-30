@@ -14,11 +14,14 @@ export default function Header() {
 
     return (
         <header className={styles.cabecalho}>
-            <Link href={usuario?.uid ? '/home/dashboard' : '/'} className="relative w-full max-w-[250px] h-[45px]">
-                <Image alt="Logo Mini Finance" src={'/mini-finance.png'} fill className="object-cover"></Image>
+            <Link href={usuario?.uid ? '/home/dashboard' : '/'} className="flex h-[50px] items-center w-full max-w-[330px]">
+                <div className="relative w-full max-w-[40px] h-[40px] sm:max-w-[50px] sm:h-[50px]">
+                    <Image alt="Logo Mini Finance" src={'/logo-mini-finance.png'} fill className="object-cover"></Image>
+                </div>
+                <div className="relative w-full max-w-[290px] h-[40px] sm:h-[50px]">
+                    <Image alt="Texto Mini Finance" src={'/texto-mini-finance.png'} fill className="object-cover"></Image>
+                </div>
             </Link>
-
-
             {
                 usuario?.uid ? (
                     <Offcanvas />
