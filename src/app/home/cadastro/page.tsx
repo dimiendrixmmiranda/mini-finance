@@ -196,9 +196,11 @@ export default function Page() {
         try {
             const despesasRef = collection(db, "usuarios", usuario.uid, "despesas");
 
+            const valorDaDespesa = transformarDinheiroEmNumber(cadastroDeDespesa.valorDaDespesa)
+
             await addDoc(despesasRef, {
                 nome: cadastroDeDespesa.nome,
-                valorDaDespesa: cadastroDeDespesa.valorDaDespesa,
+                valorDaDespesa: valorDaDespesa,
                 formaDePagamento: cadastroDeDespesa.formaDePagamento,
                 funcionarioQuePagou: cadastroDeDespesa.funcionarioQuePagou,
                 data: Timestamp.fromDate(new Date(cadastroDeDespesa.data)),
