@@ -5,6 +5,8 @@ export default interface Produto {
     quantidade: number;
     precoUnitario: number;
     precoUnitarioVenda: number;
-    tamanho: string;
     data: Date;
+    tamanho?: string;
+    marca?: string;
+    modelo?: string
 }

@@ -12,6 +12,15 @@ interface GraficoPizzaProps<T> {
 }
 
 export default function GraficoPizza<T>({ array, chaveNome, chaveValor, titulo }: GraficoPizzaProps<T>) {
+    if (!array || array.length === 0) {
+        return (
+            <div className="bg-white rounded-xl shadow p-4 flex flex-col items-center justify-center h-64">
+                <h2 className="text-xl font-bold mb-4 text-black text-center">{titulo}</h2>
+                <p className="text-gray-500">Não disponível</p>
+            </div>
+        )
+    }
+
     return (
         <div className="bg-white rounded-xl shadow p-4">
             <h2 className="text-xl font-bold mb-4 text-black text-center">{titulo}</h2>
@@ -34,7 +43,6 @@ export default function GraficoPizza<T>({ array, chaveNome, chaveValor, titulo }
                         formatter={(value: number) => [`R$ ${value.toFixed(2)}`, 'Valor']}
                         labelFormatter={(label: string) => `${label}`}
                     /> */}
-
                 </PieChart>
             </ResponsiveContainer>
         </div>

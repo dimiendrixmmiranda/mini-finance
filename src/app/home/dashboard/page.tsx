@@ -8,6 +8,7 @@ import Template from "@/components/template/Template";
 import useAuth from "@/data/hook/useAuth";
 import { useDespesas } from "@/data/hook/useDespesas";
 import { useProdutos } from "@/data/hook/useProdutos";
+import { useDadosUsuario } from "@/data/hook/useUsuario";
 import { useVendas } from "@/data/hook/useVendas";
 import transformarDinheiroEmNumber from "@/data/utils/transformarDinheiroEmNumber";
 import { useEffect, useState } from "react";
@@ -17,7 +18,7 @@ export default function Page() {
     const { produtos } = useProdutos(usuario || undefined)
     const { vendas } = useVendas(usuario || undefined)
     const { despesas } = useDespesas(usuario || undefined)
-
+    const dadosDoUsuario = useDadosUsuario(usuario ?? null)
     // Graficos
     const [produtoEQuantidade, setProdutoEQuantidade] = useState<{ produto: string, quantidade: number }[]>([]);
     const [produtosMaisVendidos, setProdutosMaisVendidos] = useState<{ produto: string, quantidade: number }[]>([]);
@@ -29,9 +30,6 @@ export default function Page() {
     
     const [lucroUltimos7Dias, setLucroUltimos7Dias] = useState<{ dia: string, lucro: number }[]>([])
     const [lucroMensal, setLucroMensal] = useState<{ mes: string, lucro: number }[]>([])
-
-    console.log(lucroUltimos7Dias)
-    console.log(lucroMensal)
 
     useEffect(() => {
         if (!produtos) return;
@@ -174,6 +172,7 @@ export default function Page() {
         <ForcarAutenticacao>
             <Template>
                 <div className="p-4 flex flex-col gap-4">
+                    <h1 className="uppercase font-bold text-xl text-center md:text-3xl lg:text-5xl">{dadosDoUsuario?.nomeDoNegocio}</h1>
                     <div className="flex flex-col gap-2 md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-4">
                         <GraficoPizza
                             array={produtoEQuantidade}

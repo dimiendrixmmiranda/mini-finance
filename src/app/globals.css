@@ -15,6 +15,9 @@
   --cor-4: #030124;
   --cor-5: #1c3d8a;
   --cor-6: #03020f;
+  --azul-primario: #1441a8;
+  --azul-secundario: #0c2b74;
+  --azul-terciario: #021646;
 }
 
 @media (prefers-color-scheme: dark) {

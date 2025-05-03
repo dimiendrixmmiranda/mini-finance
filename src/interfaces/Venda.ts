@@ -7,5 +7,7 @@ export default interface Venda {
     quantidadeVendida: number
     valorFinalDaVenda: number
     nome: string
-    tamanho: string
+    tamanho?: string
+    marca?: string
+    modelo?: string
 }

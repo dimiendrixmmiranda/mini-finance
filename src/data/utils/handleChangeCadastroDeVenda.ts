@@ -9,6 +9,7 @@ export default function handleChangeCadastroDeVenda(
 ) {
     const { id, value } = e.target;
     const produtoSelecionado = produtos.find(prod => prod.nome === value);
+    console.log(produtoSelecionado)
     if (id === "nome") {
         if (produtoSelecionado) {
             setCadastroDeVenda(prev => ({

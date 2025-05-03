@@ -2,8 +2,10 @@ import { useState, useEffect } from "react"
 import { collection, getDocs } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import Produto from "@/interfaces/Produto"
+import { useDadosUsuario } from "./useUsuario"
 
 export function useProdutos(usuario?: { uid: string }) {
+    
     const [produtos, setProdutos] = useState<Produto[]>([])
     const [carregando, setCarregando] = useState(true)
     const [erro, setErro] = useState<Error | null>(null)
@@ -20,6 +22,8 @@ export function useProdutos(usuario?: { uid: string }) {
                 const produtosRef = collection(db, "usuarios", usuario.uid, "produtos")
                 const snapshot = await getDocs(produtosRef)
 
+                console.log(usuario)
+
                 const lista: Produto[] = snapshot.docs.map(doc => {
                     const data = doc.data()
                     return {
@@ -30,6 +34,8 @@ export function useProdutos(usuario?: { uid: string }) {
                         precoUnitario: data.precoUnitario,
                         precoUnitarioVenda: data.precoUnitarioVenda,
                         tamanho: data.tamanho,
+                        modelo:data.modelo,
+                        marca:data.marca,
                         data: data.data?.toDate ? data.data.toDate() : new Date()
                     }
                 })

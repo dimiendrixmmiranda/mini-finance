@@ -7,7 +7,6 @@ import { categorias } from "@/data/utils/categoria";
 import handleChangeCadastroDeDespesa from "@/data/utils/handleChangeCadastroDeDespesa";
 import handleChangeCadastroProduto from "@/data/utils/handleChangeCadastroDeProduto";
 import handleChangeCadastroDeVenda from "@/data/utils/handleChangeCadastroDeVenda";
-import handleChangeCadastroVenda from "@/data/utils/handleChangeCadastroDeVenda";
 import transformarDinheiroEmNumber from "@/data/utils/transformarDinheiroEmNumber";
 import CadastroDeDespesa from "@/interfaces/CadastroDeDespesa";
 import CadastroDeProduto from "@/interfaces/CadastroDeProduto";
@@ -37,13 +36,13 @@ export default function Page() {
         validade: '',
         cor: '',
     });
+
     const [cadastroDeVenda, setCadastroDeVenda] = useState<CadastroDeVenda>({
         nome: '',
         quantidadeVendida: '',
         precoUnitario: '',
         precoUnitarioVenda: '',
         desconto: '',
-        tamanho: '',
         valorFinalDaVenda: '',
         data: new Date().toISOString().split('T')[0],
     })
@@ -156,26 +155,49 @@ export default function Page() {
                 return;
             }
 
-            const venda = {
-                produtoId: produtoSelecionado.id,
-                nome: produtoSelecionado.nome,
-                quantidadeVendida: quantidadeVenda,
-                precoUnitario: cadastroDeVenda.precoUnitario && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitario),
-                precoUnitarioVenda: cadastroDeVenda.precoUnitarioVenda && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitarioVenda),
-                desconto: cadastroDeVenda.desconto,
-                valorFinalDaVenda: valorFinalDaVenda,
-                data: cadastroDeVenda.data && Timestamp.fromDate(new Date(cadastroDeVenda.data)),
-                tamanho: produtoSelecionado.tamanho
-            };
+            if (dadosUsuario?.tipoDeLoja === 'eletronicos') {
+                const venda = {
+                    produtoId: produtoSelecionado.id,
+                    nome: produtoSelecionado.nome,
+                    quantidadeVendida: quantidadeVenda,
+                    precoUnitario: cadastroDeVenda.precoUnitario && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitario),
+                    precoUnitarioVenda: cadastroDeVenda.precoUnitarioVenda && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitarioVenda),
+                    desconto: cadastroDeVenda.desconto,
+                    valorFinalDaVenda: valorFinalDaVenda,
+                    data: cadastroDeVenda.data && Timestamp.fromDate(new Date(cadastroDeVenda.data)),
+                };
 
-            const vendasRef = collection(db, "usuarios", usuario.uid, "vendas");
-            await addDoc(vendasRef, venda);
 
-            const novaQuantidade = quantidadeAtual - quantidadeVenda;
-            await updateDoc(produtoRef, { quantidade: novaQuantidade });
+                const vendasRef = collection(db, "usuarios", usuario.uid, "vendas");
+                await addDoc(vendasRef, venda);
 
-            alert("Venda salva com sucesso!");
+                const novaQuantidade = quantidadeAtual - quantidadeVenda;
+                await updateDoc(produtoRef, { quantidade: novaQuantidade });
 
+                alert("Venda salva com sucesso!");
+            } else if (dadosUsuario?.tipoDeLoja === 'loja-de-roupas') {
+                const venda = {
+                    produtoId: produtoSelecionado.id,
+                    nome: produtoSelecionado.nome,
+                    quantidadeVendida: quantidadeVenda,
+                    precoUnitario: cadastroDeVenda.precoUnitario && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitario),
+                    precoUnitarioVenda: cadastroDeVenda.precoUnitarioVenda && transformarDinheiroEmNumber(cadastroDeVenda.precoUnitarioVenda),
+                    desconto: cadastroDeVenda.desconto,
+                    valorFinalDaVenda: valorFinalDaVenda,
+                    data: cadastroDeVenda.data && Timestamp.fromDate(new Date(cadastroDeVenda.data)),
+                    tamanho: produtoSelecionado.tamanho
+                };
+                console.log(produtoSelecionado)
+                console.log(venda)
+
+                const vendasRef = collection(db, "usuarios", usuario.uid, "vendas");
+                await addDoc(vendasRef, venda);
+
+                const novaQuantidade = quantidadeAtual - quantidadeVenda;
+                await updateDoc(produtoRef, { quantidade: novaQuantidade });
+
+                alert("Venda salva com sucesso!");
+            }
             setTimeout(() => {
                 window.location.reload();
             }, 1000)
@@ -290,7 +312,7 @@ export default function Page() {
                                     className="text-black h-[30px] px-1 capitalize"
                                     id="nome"
                                     value={cadastroDeVenda.nome}
-                                    onChange={(e) => handleChangeCadastroVenda(e, setCadastroDeVenda, produtos)}
+                                    onChange={(e) => handleChangeCadastroDeVenda(e, setCadastroDeVenda, produtos)}
                                 >
                                     <option value="">Selecione um produto</option>
                                     {produtos.map((produto) => (
@@ -419,7 +441,7 @@ export default function Page() {
                                     className="text-black h-[30px] px-1 capitalize"
                                     id="nome"
                                     value={cadastroDeVenda.nome}
-                                    onChange={(e) => handleChangeCadastroVenda(e, setCadastroDeVenda, produtos)}
+                                    onChange={(e) => handleChangeCadastroDeVenda(e, setCadastroDeVenda, produtos)}
                                 >
                                     <option value="">Selecione um produto</option>
                                     {produtos.map((produto) => (

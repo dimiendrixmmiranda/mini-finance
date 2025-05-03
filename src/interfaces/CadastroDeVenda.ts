@@ -6,5 +6,4 @@ export default interface CadastroDeVenda {
     desconto?: string;
     valorFinalDaVenda?: string;
     data?: string;
-    tamanho?: string;
 }
